@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLibroRequest;
-use App\Http\Requests\UpdateLibroRequest;
 use App\Models\Libro;
+use Illuminate\Http\Request;
 
 class LibroController extends Controller
 {
@@ -13,7 +12,7 @@ class LibroController extends Controller
      */
     public function index()
     {
-        //
+        return view('libros.index', ['libros'=>Libro::all()]);
     }
 
     /**
@@ -21,15 +20,26 @@ class LibroController extends Controller
      */
     public function create()
     {
-        //
+        return view('libros.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreLibroRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+        ], [
+            'titulo.required' => 'El título es obligatorio.',
+            'titulo.max' => 'El título debe contener menos de 255 caracteres.',
+            'autor.required' => 'El autor es obligatorio.',
+            'autor.max' => 'El autor debe contener menos de 255 caracteres.',
+        ]);
+        Libro::create($validated);
+        session()->flash('exito', 'Libro creado correctamente.');
+        return redirect()->route('libros.index');
     }
 
     /**
@@ -37,7 +47,7 @@ class LibroController extends Controller
      */
     public function show(Libro $libro)
     {
-        //
+        return view('libros.show', ['libro'=>$libro]);
     }
 
     /**
@@ -45,15 +55,29 @@ class LibroController extends Controller
      */
     public function edit(Libro $libro)
     {
-        //
+        return view('libros.edit', [
+            'libro'=>$libro
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLibroRequest $request, Libro $libro)
+    public function update(Request $request, Libro $libro)
     {
-        //
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+        ], [
+            'titulo.required' => 'El título es obligatorio.',
+            'titulo.max' => 'El título debe contener menos de 255 caracteres.',
+            'autor.required' => 'El autor es obligatorio.',
+            'autor.max' => 'El autor debe contener menos de 255 caracteres.',
+        ]);
+        $libro->fill($validated);
+        $libro->save();
+        session()->flash('exito', 'Libro modificado correctamente.');
+        return redirect()->route('libros.index');
     }
 
     /**
@@ -61,6 +85,7 @@ class LibroController extends Controller
      */
     public function destroy(Libro $libro)
     {
-        //
+        $libro->delete();
+        return redirect()->route('libros.index');
     }
 }
