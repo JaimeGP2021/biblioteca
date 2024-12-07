@@ -85,6 +85,10 @@ class LibroController extends Controller
      */
     public function destroy(Libro $libro)
     {
+        foreach ($libro->ejemplares as $ejemplar) {
+            $ejemplar->clientes()->detach();
+        }
+        $libro->ejemplares()->delete();
         $libro->delete();
         return redirect()->route('libros.index');
     }
