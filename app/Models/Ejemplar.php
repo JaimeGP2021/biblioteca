@@ -13,11 +13,11 @@ class Ejemplar extends Model
     protected $table = 'ejemplares';
 
     public function libros(){
-        $this->belongsTo(Libro::class);
+        return $this->belongsTo(Libro::class);
     }
 
     public function clientes(){
-        $this->belongsToMany(Cliente::class, 'prestamos')
-                            ->withPivot('fecha_hora');
+        return $this->belongsToMany(Cliente::class, 'prestamos')
+                            ->withPivot('fecha_hora', 'fecha_hora_devolucion');
     }
 }

@@ -11,7 +11,7 @@ class Cliente extends Model
     use HasFactory;
 
     public function ejemplares(){
-        $this->belongsToMany(Ejemplar::class, 'prestamos')
-                            ->withPivot('fecha_hora');
+        return $this->belongsToMany(Ejemplar::class, 'prestamos')
+                            ->withPivot('fecha_hora', 'fecha_hora_devolucion');
     }
 }
