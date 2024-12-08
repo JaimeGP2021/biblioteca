@@ -36,7 +36,13 @@
                                 <span class="font-semibold text-gray-900 dark:text-white">{{$ejemplar->codigo}}</span> --- Estado:
                                 @if ($prestao = $ejemplar->clientes()->wherePivotNull('fecha_hora_devolucion')->first())
                                     <span class="font-semibold text-gray-900 dark:text-white">{{'Prestado'}}</span> --- Fecha Préstamo:
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{$prestao->pivot->fecha_hora}}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">{{$fechilla = $prestao->pivot->fecha_hora}}</span> --- Pasado de fecha:
+                                    {{-- {{dd()}} --}}
+                                    @if (((new Datetime($fechilla))->diff(now())->days) > 30 )
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{ 'Si' }}</span>
+                                    @else
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{ 'No' }}</span>
+                                    @endif
                                 @else
                                     <span class="font-semibold text-gray-900 dark:text-white">{{'Se encuentra disponible'}}</span>
                                 @endif
